@@ -10,10 +10,10 @@ GameObject:
   m_Component:
   - component: {fileID: 3756785613855215039}
   - component: {fileID: 3756785613855215036}
-  - component: {fileID: 3756785613855215038}
   - component: {fileID: -2876556254970673716}
+  - component: {fileID: 639332503993033253}
   m_Layer: 8
-  m_Name: Tile
+  m_Name: TileJump
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -72,7 +72,7 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
-  m_Sprite: {fileID: 21300000, guid: 9cd99e329731c734795510f9d7b91d1f, type: 3}
+  m_Sprite: {fileID: 21300000, guid: ce54db1ae1d9e034aa28d19383bc7563, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -83,26 +83,6 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
---- !u!114 &3756785613855215038
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3756785613855215037}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1a3bc1849ffef68488ff890c8772db12, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  images:
-  - {fileID: 21300000, guid: 9cd99e329731c734795510f9d7b91d1f, type: 3}
-  - {fileID: 21300000, guid: be206efdcb463b5469c0cafd7b714962, type: 3}
-  - {fileID: 21300000, guid: 6540e9cabf1a7f540a6919c322513b2b, type: 3}
-  - {fileID: 21300000, guid: ce54db1ae1d9e034aa28d19383bc7563, type: 3}
-  - {fileID: 21300000, guid: f4bb1bda9b486e748acbe741505e2fdc, type: 3}
-  - {fileID: 21300000, guid: 48cd621c095f95b4b99d0f682b5eb033, type: 3}
-  - {fileID: 21300000, guid: 053eb8f19913d064589db18b78fbd225, type: 3}
 --- !u!61 &-2876556254970673716
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -120,7 +100,7 @@ BoxCollider2D:
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0.5, y: 0.5}
-    oldSize: {x: 1.37, y: 1.37}
+    oldSize: {x: 1.07, y: 1.22}
     newSize: {x: 1.37, y: 1.37}
     adaptiveTilingThreshold: 0.5
     drawMode: 0
@@ -129,3 +109,16 @@ BoxCollider2D:
   serializedVersion: 2
   m_Size: {x: 1, y: 1}
   m_EdgeRadius: 0
+--- !u!114 &639332503993033253
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3756785613855215037}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 10c2c21679d66cf459390f08da14ed39, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  jumpForce: 15

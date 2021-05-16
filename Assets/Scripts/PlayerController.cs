@@ -29,6 +29,31 @@ public class PlayerController : MonoBehaviour
         }
 
         UpdateMove();
+        UpdateColllision();
+    }
+
+    private void UpdateColllision()
+    {
+        // 플레이어의 위쪽 방향에 충돌이 감지되면
+        if (movement2D.IsCollision.up)
+        {
+            CollisionToTile(CollisionDirection.Up);
+        }
+        // 플레이어의 아래쪽 방향에 충돌이 감지되면
+        else if (movement2D.IsCollision.down)
+        {
+            CollisionToTile(CollisionDirection.Down);
+        }
+    }
+
+    private void CollisionToTile(CollisionDirection direction)
+    {
+        Tile tile = movement2D.HitTransform.GetComponent<Tile>();
+        if(tile != null)
+        {
+            // 플레이어에게 부딪힌 타일의 속성에 따라 충돌 처리
+            tile.Collision(direction);
+        }
     }
 
     private void UpdateMove()

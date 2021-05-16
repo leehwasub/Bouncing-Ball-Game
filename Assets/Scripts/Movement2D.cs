@@ -3,6 +3,8 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+public enum MoveType {Left = -1, UpDown = 0, Right = 1 }
+
 public class Movement2D : MonoBehaviour
 {
     [Header("Raycast Collision")]
@@ -32,9 +34,16 @@ public class Movement2D : MonoBehaviour
     private ColliderCorner colliderCorner; // 광선 발사를 위한 모서리 점
     private CollisionChecker collisionChecker; // 4면의 충돌 여부 체크
 
+    public CollisionChecker IsCollision => collisionChecker; // 플레이어의 4면 충돌 여부 확인용
+    public Transform HitTransform { private set; get;} // 플레이어에게 부딪힌 오브젝트 정보
+
+    public MoveType MoveType { private set; get; } // 이동 방식에 대한 열거형 변수
+
     private void Awake()
     {
         collider2D = GetComponent<Collider2D>();
+
+        MoveType = MoveType.UpDown; // 기본적으로 위/아래 이동을 한다
     }
 
     private void Update()
@@ -54,12 +63,20 @@ public class Movement2D : MonoBehaviour
 
         // 점프 업데이트 (바닥을 밞으면 바로 점프가 되도록 JumpTo()를 계속 호출)
         // 추후 타일에서 호출하게 됨
-        JumpTo();
+        // JumpTo();
     }
     private void UpdateMovement()
     {
-        // 중력 적용
-        velocity.y += gravity * Time.deltaTime;
+        if(MoveType == MoveType.UpDown)
+        {
+            // 중력 적용
+            velocity.y += gravity * Time.deltaTime;
+        }
+        // 왼쪽 or 오른쪽 이동할 때는 좌/우 이동
+        else
+        {
+            velocity.x = (int)MoveType * moveSpeed;
+        }
 
         // 현재 프레임에 적용될 실제 속력
         Vector3 currentVelocity = velocity * Time.deltaTime;
@@ -82,6 +99,13 @@ public class Movement2D : MonoBehaviour
     /// </summary>
     public void MoveTo(float x)
     {
+        // 왼쪽 or 오른쪽 이동 상태일때 좌/우 방향키를 누르면
+        if(x != 0 && MoveType != MoveType.UpDown)
+        {
+            // MoveType을 위/아래 이동으로 변경
+            MoveType = MoveType.UpDown;
+        }
+
         // x축 방향 속력을 x * moveSpeed로 설정
         velocity.x = x * moveSpeed;
     }
@@ -89,14 +113,31 @@ public class Movement2D : MonoBehaviour
     /// <summary>
     /// 타 클래스에서 호출 (점프 행동)
     /// </summary>
-    public void JumpTo()
+    public void JumpTo(float jumpForce = 0)
     {
+        //매개 변수에 0이 아닌값을 설정하면 매개변수 힘만큼 velocity.y 설정
+        if(jumpForce != 0)
+        {
+            velocity.y = jumpForce;
+            return;
+        }
+
         //바닥에 닿아있으면
         if (collisionChecker.down)
         {
             // y축 속력을 JumpForce로 설정해 점프!
-            velocity.y = jumpForce;
+            velocity.y = this.jumpForce;
         }
+    }
+
+    public void SetupStraightMove(MoveType moveType, Vector3 position)
+    {
+        // 플레이어의 이동 방향 설정
+        MoveType = moveType;
+        // 현재 플레이어의 위치를 직전 타일의 위치로 설정
+        transform.position = position;
+        // y축 속력을 초기화
+        velocity.y = 0;
     }
 
     
@@ -161,6 +202,9 @@ public class Movement2D : MonoBehaviour
                 // 현재 진행방향, 부딪힌 방향의 정보가 true로 변경
                 collisionChecker.down = direction == -1;
                 collisionChecker.up = direction == 1;
+
+                // 부딪힌 오브젝트의 Transform 정보
+                HitTransform = hit.transform;
             }
 
             // Debug. 발사되는 광선을 Scene View에서 확인

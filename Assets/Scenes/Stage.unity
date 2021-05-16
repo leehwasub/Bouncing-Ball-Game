@@ -722,8 +722,15 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   stageController: {fileID: 1530157609}
   stageUI: {fileID: 1530157610}
-  tilePrefabs: {fileID: 3756785613855215037, guid: 62e3c57cc33667542a79b7806bb09f68,
-    type: 3}
+  tilePrefabs:
+  - {fileID: 3756785613855215037, guid: 62e3c57cc33667542a79b7806bb09f68, type: 3}
+  - {fileID: 3756785613855215037, guid: f0726af6433f5284682f44e6b481748b, type: 3}
+  - {fileID: 3756785613855215037, guid: 9d0275bdb626b1242b300478afe5b16c, type: 3}
+  - {fileID: 3756785613855215037, guid: 348c85e1bd348da479c8140bd02096f1, type: 3}
+  - {fileID: 3756785613855215037, guid: 8f4d692787fc98745993096cebad54bb, type: 3}
+  - {fileID: 3756785613855215037, guid: 8ebb0f4dca0608246815bb61fb9cf2ef, type: 3}
+  - {fileID: 3756785613855215037, guid: 7abe4626a3f2d01489d831e36e9c4611, type: 3}
+  movement2D: {fileID: 587063379}
   itemPrefab: {fileID: 7275427650691714933, guid: d4a2396b5f2c42648988ca8fcd365ea6,
     type: 3}
 --- !u!1 &938380154

@@ -12,7 +12,9 @@ public class Tilemap2D : MonoBehaviour
 
     [Header("Tile")]
     [SerializeField]
-    private GameObject tilePrefabs;
+    private GameObject[] tilePrefabs; // 타일의 속성에 따른 프리팹 별도 생성 / 배열에 저장
+    [SerializeField]
+    private Movement2D movement2D; // 플레이어와 타일이 부딪혔을 때 플레이어 제어를 위한 Movement2D
 
     [Header("Item")]
     [SerializeField]
@@ -21,8 +23,12 @@ public class Tilemap2D : MonoBehaviour
     private int maxCoinCount = 0; // 현재 스테이지에 존재하는 최대 코인 개수
     private int currentCoinCount = 0; // 현재 스테이지에 존재하는 현재 코인 개수
 
+    private List<TileBlink> blinkTiles; // 현재 스테이지에 존재하는 순간이동 타일 리스트
+
     public void GenerateTilemap(MapData mapData)
     {
+        blinkTiles = new List<TileBlink>();
+
         int width = mapData.mapSize.x;
         int height = mapData.mapSize.y;
 
@@ -62,17 +68,31 @@ public class Tilemap2D : MonoBehaviour
 
         // 현재 코인의 개수가 바뀔 때마자 UI 출력 정보 갱신
         stageUI.UpdateCoinCount(currentCoinCount, maxCoinCount);
+
+
+        // 순간이동 타일은 다른 순간이동 타일로 이동할 수 있기때문에
+        // 맵에 배치되어 있는 모든 순간이동 타일의 정보를 가지고 있어야 한다
+        foreach(TileBlink title in blinkTiles)
+        {
+            title.SetBlinkTiles(blinkTiles);
+        }
     }
 
     private void SpawnTile(TileType tileType, Vector3 position)
     {
-        GameObject clone = Instantiate(tilePrefabs, position, Quaternion.identity);
+        GameObject clone = Instantiate(tilePrefabs[(int)tileType - 1], position, Quaternion.identity);
 
         clone.name = "Tile"; // Tile 오브젝트의 이름을 "Tile"로 설정
         clone.transform.SetParent(transform); // Tilemap2D 오브젝트를 Tile 오브젝트의 부모로 설정
 
         Tile tile = clone.GetComponent<Tile>(); // 방금 생성한 타일(clone) 오브젝트의 Tile.Setup() 메소드 호출
-        tile.Setup(tileType);
+        tile.Setup(movement2D);
+
+        if(tileType == TileType.Blink)
+        {
+            // 현재 맵에 존재하는 순간이동 타일만 따로 리스트에 보관
+            blinkTiles.Add(clone.GetComponent<TileBlink>());
+        }
     }
 
     private void SpawnItem(Vector3 position)
