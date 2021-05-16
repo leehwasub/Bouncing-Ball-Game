@@ -4,6 +4,12 @@ using UnityEngine;
 
 public class Tilemap2D : MonoBehaviour
 {
+    [Header("Common")]
+    [SerializeField]
+    private StageController stageController;
+    [SerializeField]
+    private StageUI stageUI;
+
     [Header("Tile")]
     [SerializeField]
     private GameObject tilePrefabs;
@@ -11,6 +17,9 @@ public class Tilemap2D : MonoBehaviour
     [Header("Item")]
     [SerializeField]
     private GameObject itemPrefab;
+
+    private int maxCoinCount = 0; // 현재 스테이지에 존재하는 최대 코인 개수
+    private int currentCoinCount = 0; // 현재 스테이지에 존재하는 현재 코인 개수
 
     public void GenerateTilemap(MapData mapData)
     {
@@ -49,6 +58,10 @@ public class Tilemap2D : MonoBehaviour
                 }
             }
         }
+        currentCoinCount = maxCoinCount;
+
+        // 현재 코인의 개수가 바뀔 때마자 UI 출력 정보 갱신
+        stageUI.UpdateCoinCount(currentCoinCount, maxCoinCount);
     }
 
     private void SpawnTile(TileType tileType, Vector3 position)
@@ -68,6 +81,27 @@ public class Tilemap2D : MonoBehaviour
 
         clone.name = "Item"; // Item 오브젝트의 이름을 "Item"으로 설정
         clone.transform.SetParent(transform); // Tilemap2D 오브젝트를 Item 오브젝트의 부모로 설정
+
+        // 현재 아이템은 코인 밖에 없기때문에 생성한 아이템의 개수 = 코인 개수
+        maxCoinCount++;
+    }
+
+    public void GetCoin(GameObject coin)
+    {
+        currentCoinCount--; // 현재 코인 개수 -1
+
+        // 현재 코인의 개수가 바뀔 때마자 UI 출력 정보 갱신
+        stageUI.UpdateCoinCount(currentCoinCount, maxCoinCount);
+
+        // 코인 아이템이 사라질 때 호출하는 Item.Exit() 메소드 호출
+        coin.GetComponent<Item>().Exit();
+
+        // 현재 스테이지에 코인 개수가 0이면
+        if(currentCoinCount == 0)
+        {
+            //게임 클리어
+            stageController.GameClear();
+        }
     }
 
 }
